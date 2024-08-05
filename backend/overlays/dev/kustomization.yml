@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: mo991207/counter-springboot-app  # 기존 이미지 이름
+  newName: mo991207/counter-springboot-app  # 새로운 이미지 이름
+  newTag: latest  # 변경할 이미지 태그
+resources:
+- ../../base
+patchesStrategicMerge:
+- back-deployment-patch.yaml
+- back-service-patch.yaml
