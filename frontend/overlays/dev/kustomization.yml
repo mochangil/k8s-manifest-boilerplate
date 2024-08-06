@@ -3,7 +3,7 @@ kind: Kustomization
 images:
 - name: mo991207/counter-react-app  # 기존 이미지 이름
   newName: mo991207/counter-react-app  # 새로운 이미지 이름
-  newTag: latest  # 변경할 이미지 태그
+  newTag: 16c61f67cd803e69ea0a8b38e52629259a0add9b
 resources:
 - ../../base
 patchesStrategicMerge:
