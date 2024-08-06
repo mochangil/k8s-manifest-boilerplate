@@ -7,5 +7,5 @@ images:
 resources:
 - ../../base
 patchesStrategicMerge:
-- back-deployment-patch.yaml
-- back-service-patch.yaml
+- deployment-patch.yml
+- service-patch.yml
