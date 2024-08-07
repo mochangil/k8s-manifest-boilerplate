@@ -19,3 +19,19 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-backend-config
+                  key: db_url
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-backend-config
+                  key: db_username
+            - name: DB_DRIVER_CLASS_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-backend-config
+                  key: db_driver_class_name
