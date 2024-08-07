@@ -22,10 +22,10 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /config
-        volumes:
-          - name: config-volume
-            configMap:
-              name: demo-backend-config
-              items:
-                - key: application.properties
-                  path: application.properties
+      volumes:
+        - name: config-volume
+          configMap:
+            name: demo-backend-config
+            items:
+              - key: application.properties
+                path: application.properties
