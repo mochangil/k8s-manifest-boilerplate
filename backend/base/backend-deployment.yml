@@ -24,14 +24,14 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: demo-backend-config
-                  key: db_url
+                  key: db.url
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: demo-backend-config
-                  key: db_username
+                  key: db.username
             - name: DB_DRIVER_CLASS_NAME
               valueFrom:
                 configMapKeyRef:
                   name: demo-backend-config
-                  key: db_driver_class_name
+                  key: db.driver_class_name
