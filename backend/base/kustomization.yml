@@ -4,4 +4,8 @@ resources:
   - backend-deployment.yml
   - backend-service.yml
   - demo-backend-config.yml
+  - ingress.yml
+  - ingress-controller
+
+
 
