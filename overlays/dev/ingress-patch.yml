@@ -4,7 +4,7 @@ metadata:
   name: demo-ingress
 spec:
   rules:
-  - host: "89dd-211-244-225-211.ngrok-free.app"
+  - host: "35d7-211-244-225-211.ngrok-free.app"
     http:
       paths:
       - path: /api
