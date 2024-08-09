@@ -9,5 +9,7 @@ resources:
   - backend/backend-config.yml
   - ingress/ingress-controller.yml
   - ingress/ingress.yml
+  - clusterrole/cluster-role.yml
+  - clusterrole/cluster-role-binding.yml
 
 
