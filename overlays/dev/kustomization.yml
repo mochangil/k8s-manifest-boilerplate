@@ -1,11 +1,20 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+
 images:
 - name: mo991207/counter-springboot-app  # 기존 이미지 이름
   newName: mo991207/counter-springboot-app  # 새로운 이미지 이름
   newTag: 16c61f67cd803e69ea0a8b38e52629259a0add9b
+- name: mo991207/counter-react-app
+  newName: mo991207/counter-react-app
+  newTag: 16c61f67cd803e69ea0a8b38e52629259a0add9b
+
 resources:
-- ../../base
+  - ../../base
+
 patchesStrategicMerge:
-- deployment-patch.yml
-- service-patch.yml
+  - ingress-patch.yml
+  - frontend-patch.yml
+  - backend-patch.yml
+
