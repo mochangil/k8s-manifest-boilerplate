@@ -9,11 +9,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: frontend-fargate
+      app: demo-frontend
   template:
     metadata:
       labels:
-        app: frontend-fargate
+        app: demo-frontend
 
 # Service 패치
 apiVersion: v1
@@ -26,5 +26,6 @@ metadata:
     env: dev
 spec:
   selector:
-    app: frontend-fargate
+    app: demo-frontend
+
 
