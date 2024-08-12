@@ -78,7 +78,7 @@ spec:
       serviceAccountName: argocd-notifications-controller
       containers:
         - name: controller
-          image: argoprojlabs/argocd-notifications-controller:v1.0.2
+          image: argoprojlabs/argocd-notifications:v1.2.1
           args:
             - --argocd-repo-server
             - http://argocd-repo-server.argocd.svc:8081
