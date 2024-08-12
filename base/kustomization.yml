@@ -12,5 +12,6 @@ resources:
   - ingress/ingress.yml
   - clusterrole/cluster-role.yml
   - clusterrole/cluster-role-binding.yml
-
+  - notification/install-argocd-notifications.yml
+  - notification/notifications-config.yml
 
