@@ -1,7 +1,7 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  annotations:
+  annotations: 
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
   labels:
@@ -593,15 +593,6 @@ spec:
     subresources:
       status: {}
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/name: aws-load-balancer-controller
-  name: aws-load-balancer-controller
-  namespace: kube-system
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -858,11 +849,26 @@ spec:
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: aws-load-balancer-controller
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: role
+                  operator: In
+                  values:
+                  - ingress-controller #ingress-controller node group에 배포되어야 한다.
       containers:
       - args:
-        - --cluster-name=your-cluster-name
+        - --cluster-name=$(CLUSTER_NAME)
         - --ingress-class=alb
         image: public.ecr.aws/eks/aws-load-balancer-controller:v2.5.4
+        env:
+          - name: CLUSTER_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: cluster-info
+                key: cluster-name
         livenessProbe:
           failureThreshold: 2
           httpGet:
