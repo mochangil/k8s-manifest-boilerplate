@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-info
+  namespace: kube-system
+data:
+  cluster-name: eks-demo-cluster  # 여기에 EKS 클러스터 이름을 입력
