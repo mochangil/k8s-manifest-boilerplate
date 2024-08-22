@@ -1,0 +1,47 @@
+# Deployment 패치
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-backend
+  namespace: default
+spec:
+  replicas: 4  # Upper the number of replicas for production
+  template:
+    spec:
+      containers:
+        - name: demo-backend
+          env:
+            - name: ENVIRONMENT
+              value: "production"  # Set environment-specific variables
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: role
+                operator: In
+                values: 
+                - web-service #web-service node group에도 배포되어야 한다.
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - data-access
+
+
+# Service 패치
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-backend
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/health"
+spec:
+  type: ClusterIP  # Change service type to ClusterIP for development
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
