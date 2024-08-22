@@ -1,0 +1,42 @@
+# Deployment 패치
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-frontend
+  namespace: default
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: demo-frontend
+          env:
+            - name: ENVIRONMENT
+              value: "production"  # Set environment-specific variables
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: role
+                operator: In
+                values: 
+                - web-service #web-service node group에s 배포되어야 한다.
+
+# Service 패치
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-frontend
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+spec:
+  selector:
+    app: demo-frontend
+  type: ClusterIP  # Change service type to ClusterIP for development
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
