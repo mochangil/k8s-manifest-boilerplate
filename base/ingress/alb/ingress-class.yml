@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: alb
+  annotations:
+    # AWS Load Balancer Controller를 사용하도록 설정
+    ingressclass.kubernetes.io/is-default-class: "false"
+spec:
+  controller: alb.ingress.k8s.aws/aws-load-balancer-controller
