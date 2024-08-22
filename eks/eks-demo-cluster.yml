@@ -1,0 +1,101 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-demo-cluster
+  region: ap-northeast-2
+
+vpc:
+  # cidr: "192.168.0.0/16"
+  nat:
+    gateway: Single
+  # subnets:
+  #   private:
+  #     ap-northeast-2a:
+  #       cidr: "192.168.64.64/17"
+  #   public:
+  #     ap-northeast-2b:
+  #       cidr: "192.168.64.0/17"
+
+availabilityZones: ["ap-northeast-2a"]
+
+nodeGroups:
+  - name: web-service-nodes
+    instanceType: t2.micro
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    subnets:
+      - ap-northeast-2a
+    labels:
+      role: web-service
+    tags:
+      nodegroup-role: web-service
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        externalDNS: true
+        certManager: true
+  - name: data-access-nodes
+    instanceType: t2.micro
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20
+    privateNetworking: true #Private Subnet에 위치하도록
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    subnets:
+      - ap-northeast-2a
+    labels:
+      role: data-access
+    tags:
+      nodegroup-role: data-access
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        ebs: true
+        fsx: true
+        certManager: true
+        externalDNS: true
+  - name: ingress-controller-nodes
+    instanceType: t2.micro
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    subnets:
+      - ap-northeast-2a #Public Subnet
+    labels:
+      role: ingress-controller
+    tags:
+      nodegroup-role: ingress-controller
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        externalDNS: true
+        albIngress: true #albIngress에 대한 권한 추가
+
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api","audit","scheduler"] #필요한 로그 타입만 활성화
+
+iam:
+  withOIDC: true
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: coredns
+    version: latest
