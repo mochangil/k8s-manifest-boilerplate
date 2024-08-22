@@ -7,8 +7,12 @@ resources:
   - backend/backend-deployment.yml
   - backend/backend-service.yml
   - backend/backend-config.yml
-  - ingress/ingress-controller.yml
-  - ingress/ingress-class.yml
-  - ingress/ingress.yml
+  # - ingress/alb/ingress-controller.yml
+  # - ingress/alb/ingress-class.yml
+  # - ingress/alb/ingress.yml
+  # 여기도 overlays/dev로 옮기기
+  - ingress/nginx/ingress-controller.yml
+  - ingress/nginx/ingress-class.yml
+  - ingress/nginx/ingress.yml
   - clusterrole/cluster-role.yml
   - clusterrole/cluster-role-binding.yml
