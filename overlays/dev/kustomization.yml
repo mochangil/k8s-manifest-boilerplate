@@ -12,6 +12,9 @@ images:
 
 resources:
   - ../../base
+  - nginx/ingress-controller.yml
+  - nginx/ingress-class.yml
+  - nginx/ingress.yml
 
 patchesStrategicMerge:
   - ingress-patch.yml
