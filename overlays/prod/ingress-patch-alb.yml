@@ -2,12 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-alb
-  namespace: kube-system
+  namespace: default #ingress resource와 실행될 service는 같은 namespace에 위치해야함
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]' #http만 테스트
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:<your-account-id>:certificate/<your-certificate-id>
 spec:
   ingressClassName: alb
@@ -18,13 +19,21 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend-app
+                name: demo-backend
                 port:
                   number: 8080
-          - path: /frontend
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend-app
+                name: demo-frontend
+                port:
+                  number: 80
+          
+          - path: /argocd
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
                 port:
                   number: 80
