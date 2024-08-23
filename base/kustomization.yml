@@ -11,8 +11,8 @@ resources:
   # - ingress/alb/ingress-class.yml
   # - ingress/alb/ingress.yml
   # 여기도 overlays/dev로 옮기기
-  - ingress/nginx/ingress-controller.yml
-  - ingress/nginx/ingress-class.yml
-  - ingress/nginx/ingress.yml
+  # - ingress/nginx/ingress-controller.yml
+  # - ingress/nginx/ingress-class.yml
+  # - ingress/nginx/ingress.yml
   - clusterrole/cluster-role.yml
   - clusterrole/cluster-role-binding.yml
