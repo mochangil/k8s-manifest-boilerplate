@@ -18,7 +18,29 @@ resources:
   - alb/ingress-controller-alb.yml
   - alb/ingress-class.yaml
 
-patchesStrategicMerge:
-  - ingress-patch-alb.yml
-  - frontend-patch.yml
-  - backend-patch.yml
+patches:
+  - target:
+      kind: Ingress
+      name: ingress-alb
+      namespace: default
+    path: ingress-patch-alb.yml
+  - target:
+      kind: Deployment
+      name: demo-frontend
+      namespace: default
+    path: frontend-deployment-patch.yml
+  - target:
+      kind: Service
+      name: demo-frontend
+      namespace: default
+    path: frontend-service-patch.yml
+  - target:
+      kind: Deployment
+      name: demo-backend
+      namespace: default
+    path: backend-deployment-patch.yml
+  - target:
+      kind: Service
+      name: demo-backend
+      namespace: default
+    path: backend-service-patch.yml

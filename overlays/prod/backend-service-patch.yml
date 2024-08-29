@@ -1,0 +1,13 @@
+# Service 패치
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-backend
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/health"
+spec:
+  type: ClusterIP  # Change service type to ClusterIP for development
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
