@@ -6,6 +6,7 @@ metadata:
   region: ap-northeast-2
 
 vpc:
+  # terraform에서 설정하고, 선언한 vpc 및 subnet 사용하기
   # cidr: "192.168.0.0/16"
   nat:
     gateway: Single
@@ -22,9 +23,9 @@ availabilityZones: ["ap-northeast-2a","ap-northeast-2b"]
 nodeGroups:
   - name: web-service-nodes
     instanceType: t2.micro
-    desiredCapacity: 2
+    desiredCapacity: 1 #overspec 고려
     minSize: 1
-    maxSize: 3
+    maxSize: 2
     volumeSize: 20
     ssh:
       allow: true
@@ -42,9 +43,9 @@ nodeGroups:
         certManager: true
   - name: data-access-nodes
     instanceType: t2.micro
-    desiredCapacity: 2
+    desiredCapacity: 1
     minSize: 1
-    maxSize: 3
+    maxSize: 2
     volumeSize: 20
     privateNetworking: true #Private Subnet에 위치하도록
     ssh:
@@ -65,9 +66,9 @@ nodeGroups:
         externalDNS: true
   - name: ingress-controller-nodes
     instanceType: t2.micro
-    desiredCapacity: 2
+    desiredCapacity: 1
     minSize: 1
-    maxSize: 3
+    maxSize: 2
     volumeSize: 20
     ssh:
       allow: true
@@ -84,25 +85,6 @@ nodeGroups:
         externalDNS: true
         albIngress: true #albIngress에 대한 권한 추가
 
-  - name: monitoring-nodes
-    instanceType: t2.micro
-    desiredCapacity: 1
-    minSize: 1
-    maxSize: 3
-    volumeSize: 20
-    ssh:
-      allow: true
-      publicKeyName: my-ec2-keypair
-    subnets:
-      - ap-northeast-2a
-    labels:
-      role: monitoring
-    tags:
-      nodegroup-role: monitoring
-    iam:
-      withAddonPolicies:
-        autoScaler: true
-        cloudWatch: true
 
 cloudWatch:
   clusterLogging:
