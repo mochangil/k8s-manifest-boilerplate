@@ -5,10 +5,10 @@ kind: Kustomization
 images:
 - name: mo991207/counter-springboot-app  # 기존 이미지 이름
   newName: mo991207/counter-springboot-app  # 새로운 이미지 이름
-  newTag: fc5b9753fe580ea31d5b166cc0724b2a7c2a8b9f
+  newTag: f702ee0b33419374d9d5e1c5f106fc0b3293b7eb
 - name: mo991207/counter-react-app
   newName: yoonjini/ktb_front
-  newTag: fc5b9753fe580ea31d5b166cc0724b2a7c2a8b9f
+  newTag: f702ee0b33419374d9d5e1c5f106fc0b3293b7eb
 
 resources:
   - ../../base
