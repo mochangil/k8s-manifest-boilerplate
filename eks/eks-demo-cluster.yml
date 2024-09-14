@@ -6,19 +6,10 @@ metadata:
   region: ap-northeast-2
 
 vpc:
-  # terraform에서 설정하고, 선언한 vpc 및 subnet 사용하기
-  # cidr: "192.168.0.0/16"
   nat:
     gateway: Single
-  # subnets:
-  #   private:
-  #     ap-northeast-2a:
-  #       cidr: "192.168.64.64/17"
-  #   public:
-  #     ap-northeast-2b:
-  #       cidr: "192.168.64.0/17"
 
-availabilityZones: ["ap-northeast-2a","ap-northeast-2b"]
+availabilityZones: ["ap-northeast-2a", "ap-northeast-2b"]
 
 nodeGroups:
   - name: web-service-nodes
@@ -41,22 +32,25 @@ nodeGroups:
         autoScaler: true
         externalDNS: true
         certManager: true
-  - name: data-access-nodes
-    instanceType: t2.micro
+  - name: back-nodes  # 이름 변경
+    instanceType: t2.medium  # 인스턴스 스펙 수정
     desiredCapacity: 1
     minSize: 1
     maxSize: 2
-    volumeSize: 20
-    privateNetworking: true #Private Subnet에 위치하도록
+    volumeSize: 40
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      /etc/eks/bootstrap.sh eks-demo-cluster --kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'
+    privateNetworking: true # Private Subnet에 위치하도록
     ssh:
       allow: true
       publicKeyName: my-ec2-keypair
     subnets:
       - ap-northeast-2a
     labels:
-      role: data-access
+      role: back-end  # 역할 변경
     tags:
-      nodegroup-role: data-access
+      nodegroup-role: back-end  # 태그 변경
     iam:
       withAddonPolicies:
         autoScaler: true
@@ -70,11 +64,14 @@ nodeGroups:
     minSize: 1
     maxSize: 2
     volumeSize: 20
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      /etc/eks/bootstrap.sh eks-demo-cluster --kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'
     ssh:
       allow: true
       publicKeyName: my-ec2-keypair
     subnets:
-      - ap-northeast-2a #Public Subnet
+      - ap-northeast-2a # Public Subnet
     labels:
       role: ingress-controller
     tags:
@@ -83,12 +80,11 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
         externalDNS: true
-        albIngress: true #albIngress에 대한 권한 추가
-
+        albIngress: true # albIngress에 대한 권한 추가
 
 cloudWatch:
   clusterLogging:
-    enableTypes: ["api","audit","scheduler"] #필요한 로그 타입만 활성화
+    enableTypes: ["api", "audit", "scheduler"] # 필요한 로그 타입만 활성화
 
 iam:
   withOIDC: true
