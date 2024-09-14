@@ -1,0 +1,101 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: your-cluster-name
+  region: ap-northeast-2
+
+vpc:
+  subnets:
+    private:
+      ap-northeast-2a:
+        id: <private-subnet-id>  # 여기에 Terraform으로 생성된 private subnet ID를 넣으세요
+    public:
+      ap-northeast-2a:
+        id: <public-subnet-id>  # 여기에 Terraform으로 생성된 public subnet ID를 넣으세요
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: 
+      - api
+      - scheduler
+      - audit
+
+iam:
+  withOIDC: true
+
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: coredns
+    version: latest
+  - name: aws-ebs-csi-driver  # EBS 볼륨 관리 추가
+    version: latest
+  - name: aws-load-balancer-controller  # ALB 및 NLB 관리 추가
+    version: latest
+
+nodeGroups:
+  - name: backend-nodes
+    instanceType: t2.medium
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 50 # Spring Boot 애플리케이션을 위한 충분한 용량
+    privateNetworking: true
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    labels: 
+      role: backend
+    tags:
+      Name: backend-nodes
+    iam:
+      withAddonPolicies:
+        autoScaler: true  # AutoScaler가 백엔드 확장에 도움
+        cloudWatch: true  # Spring Boot 애플리케이션의 로깅 및 모니터링
+        ebs: true         # EBS 볼륨 관리
+        xRay: true        # 백엔드 애플리케이션 성능 모니터링
+
+  - name: web-service-nodes
+    instanceType: t2.micro
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 20 # 최소한의 용량으로 설정
+    privateNetworking: false
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    labels: 
+      role: web-service
+    tags:
+      Name: web-service-nodes
+    iam:
+      withAddonPolicies:
+        autoScaler: true  # React 애플리케이션이 많아질 경우 자동 확장
+        cloudWatch: true  # 웹 서비스 로그 모니터링
+        albIngress: true  # ALB Ingress Controller가 웹 서비스로 라우팅 지원
+        xRay: true        # 웹 애플리케이션 성능 모니터링
+
+  - name: ingress-controller-nodes
+    instanceType: t2.micro
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 20 # 최소한의 용량으로 설정
+    privateNetworking: false
+    ssh:
+      allow: true
+      publicKeyName: my-ec2-keypair
+    labels: 
+      role: ingress-controller
+    tags:
+      Name: ingress-controller-nodes
+    iam:
+      withAddonPolicies:
+        albIngress: true  # ALB Ingress Controller 사용
+        autoScaler: true  # Ingress 노드 확장을 위한 정책
+        cloudWatch: true  # 클라우드에서 Ingress 모니터링
+        externalDNS: true # Route 53에서 도메인 이름 관리
