@@ -11,4 +11,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 80 #selector app pod의 TCP 80 포트가 타깃
