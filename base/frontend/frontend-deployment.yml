@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-frontend
+  name: frontend-react-app #Deployment의 레이블 정의
   namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: demo-frontend
+      app: frontend-react-app #실행될 Pod의 레이블 정의
   template:
     metadata:
       labels:
@@ -18,4 +18,4 @@ spec:
           image: mo991207/counter-react-app
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 80 #nginx serving

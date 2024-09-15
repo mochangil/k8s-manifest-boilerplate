@@ -1,31 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-backend
+  name: backend-spring-app #Deployment의 레이블 정의
   namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: demo-backend
+      app: backend-spring-app #실행될 Pod의 레이블 정의
   template:
     metadata:
       labels:
-        app: demo-backend
+        app: backend-spring-app #Deployment가 생성할 pod의 레이블 지정
     spec:
       containers:
-        - name: demo-backend
+        - name: backend-spring-app #Pod 내에서 실행될 컨테이너의 이름
           image: mo991207/counter-springboot-app
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+          - name: SAMPLE_CONFIG #컨피그맵의 키 이름과 대소문자 다르게 설정
+            valueFrom:
+              configMapKeyRef: 
+                name: config-demo # 컨피그맵 레이블
+                key: sample-config # 가져올 키
+          
           volumeMounts:
-            - name: config-volume
-              mountPath: /config
-      volumes:
-        - name: config-volume
+            - name: config-backend
+              mountPath: "/config" # 컨테이너 내부에서 volume이 마운트되는 경로
+              readOnly: true
+
+
+      volumes: # 파드 레벨에서 볼륨을 설정하고, 해당 파드 내의 컨테이너에 마운트한다.
+        - name: config-backend # Pod 내에서 사용할 볼륨의 이름을 정의 (여러 볼륨 정의시 구분을 위한 label)
           configMap:
-            name: demo-backend-config
-            items:
-              - key: application.properties
-                path: application.properties
+            name: config-backend #마운트하려는 컨피그맵의 이름
+            items: #컨피그맵에서 파일로 생성할 키 배열
+              - key: game.properties
+                path: user-interface.properties
