@@ -1,0 +1,22 @@
+# Deployment 패치
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-react-app
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: frontend-react-app
+          env:
+            - name: ENVIRONMENT
+              value: "development"  # Set environment-specific variables
+          resources:
+            limits:
+              memory: "256Mi"  # Limit the resources for development
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
