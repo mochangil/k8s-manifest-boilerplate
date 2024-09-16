@@ -5,19 +5,55 @@ kind: Kustomization
 images:
 - name: mo991207/counter-springboot-app  # 기존 이미지 이름
   newName: mo991207/counter-springboot-app  # 새로운 이미지 이름
-  newTag: e809980123283aad366bdbde8bfb431044e7d905
+  newTag: latest
 - name: mo991207/counter-react-app
-  newName: yoonjini/ktb_front
-  newTag: e809980123283aad366bdbde8bfb431044e7d905
+  newName: mo991207/counter-react-app
+  newTag: latest
 
 resources:
   - ../../base
-  - nginx/ingress-controller.yml
-  - nginx/ingress-class.yml
+  - namespace.yml
+  # helm chart로 대체 -> (dev) clusterip to nodeport
+  # - nginx/ingress-class.yml
+  # - nginx/ingress-controller.yml
   - nginx/ingress.yml
 
-patchesStrategicMerge:
-  - ingress-patch.yml
-  - frontend-patch.yml
-  - backend-patch.yml
+helmCharts:
+  - name: ingress-nginx
+    releaseName: ingress-nginx
+    namespace: ingress-nginx
+    version: 4.2.5 # 원하는 Helm 차트 버전
+    repo: https://kubernetes.github.io/ingress-nginx
+    valuesInline:
+      controller:
+        replicaCount: 1
+        service:
+          type: ClusterIP
+    behavior: replace  # 대체로 설정
 
+patches:
+  - target:
+      kind: Ingress
+      name: ingress-nginx
+      namespace: default
+    path: ingress-patch.yml
+  - target:
+      kind: Deployment
+      name: frontend-react-app
+      namespace: default
+    path: frontend/frontend-deployment-patch.yml
+  - target:
+      kind: Service
+      name: frontend-react-app
+      namespace: default
+    path: frontend/frontend-service-patch.yml
+  - target:
+      kind: Deployment
+      name: backend-spring-app
+      namespace: default
+    path: backend/backend-deployment-patch.yml
+  - target:
+      kind: Service
+      name: backend-spring-app
+      namespace: default
+    path: backend/backend-service-patch.yml

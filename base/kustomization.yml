@@ -2,15 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - config/config-backend-1.yml #직접 리소스를 명시하고 patch로 관리 (다소 수동적, 편리, 순서 신경)
+  - config/config-backend.yml #직접 리소스를 명시하고 patch로 관리 (다소 수동적, 편리, 순서 신경)
   - frontend/frontend-deployment.yml
   - frontend/frontend-service.yml
   - backend/backend-deployment.yml
   - backend/backend-service.yml
   # 환경에 따라 domain이 달라진다면, ingress 설정을 굳이 base resource로 관리할 필요 없음
   # overlay/prod -> alb, overlays/dev -> nginx
-  - clusterrole/cluster-role.yml
-  - clusterrole/cluster-role-binding.yml
 
 # 동적 configmap 생성, overlays마다 동적생성 가능 (파이프라인 설계시 유리)
 # configMapGenerator:
