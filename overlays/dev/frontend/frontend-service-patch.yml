@@ -1,0 +1,15 @@
+# Service 패치
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-react-app
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+spec:
+  selector:
+    app: frontend-react-app
+  type: ClusterIP  # Change service type to ClusterIP for development
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
