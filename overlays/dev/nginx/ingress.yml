@@ -5,20 +5,20 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "example.com"
+  - host: "9694-211-244-225-211.ngrok-free.app"
     http:
       paths:
       - path: /api
         pathType: Prefix
         backend:
           service:
-            name: backend
+            name: backend-spring-app
             port:
               number: 8080
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: frontend
+            name: frontend-react-app
             port:
               number: 80
