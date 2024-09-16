@@ -20,11 +20,11 @@ spec:
           ports:
             - containerPort: 8080
           env:
-          - name: SAMPLE_CONFIG #컨피그맵의 키 이름과 대소문자 다르게 설정
+          - name: SAMPLE_PROPERTIES #컨피그맵의 키 이름과 대소문자 다르게 설정
             valueFrom:
               configMapKeyRef: 
-                name: config-demo # 컨피그맵 레이블
-                key: sample-config # 가져올 키
+                name: config-backend # 컨피그맵 레이블
+                key: sample_properties # 가져올 키
           
           volumeMounts:
             - name: config-backend

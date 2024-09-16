@@ -11,10 +11,10 @@ spec:
   template:
     metadata:
       labels:
-        app: demo-frontend
+        app: frontend-react-app
     spec:
       containers:
-        - name: demo-frontend
+        - name: frontend-react-app
           image: mo991207/counter-react-app
           imagePullPolicy: Always
           ports:
