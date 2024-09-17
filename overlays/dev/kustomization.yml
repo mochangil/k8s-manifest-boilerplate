@@ -28,8 +28,25 @@ helmCharts:
       controller:
         replicaCount: 1
         service:
-          type: ClusterIP
-    behavior: replace  # 대체로 설정
+          type: NodePort # nodeport 수정 필요
+          nodePorts:
+            http: 31911 # 원하는 NodePort 설정
+            https: 30443 # HTTPS NodePort 설정
+          ports:
+            http: 80 # HTTP TargetPort 설정
+            https: 443 # HTTPS TargetPort 설정
+
+  - name: argo-cd
+    releaseName: argocd
+    namespace: argocd
+    version: 5.29.1 # 원하는 ArgoCD Helm 차트 버전
+    repo: https://argoproj.github.io/argo-helm
+    valuesInline:
+      server:
+        service:
+          type: ClusterIP  # 필요한 경우 NodePort나 LoadBalancer로 변경
+      controller:
+        replicaCount: 1
 
 patches:
   - target:
