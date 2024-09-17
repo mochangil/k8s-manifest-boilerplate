@@ -2,12 +2,26 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-nginx
+  namespace: default  # 기본 네임스페이스 또는 적절한 네임스페이스 선택
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # 필요 시 SSL 설정
 spec:
   ingressClassName: nginx
   rules:
   - host: "39a7-119-198-205-106.ngrok-free.app"
     http:
       paths:
+      # ArgoCD 경로 먼저 정의
+      - path: /argocd(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: argocd-server
+            namespace: argocd
+            port:
+              number: 80
+      # API 경로
       - path: /api
         pathType: Prefix
         backend:
@@ -15,6 +29,7 @@ spec:
             name: backend-spring-app
             port:
               number: 8080
+      # 기본 경로
       - path: /
         pathType: Prefix
         backend:
