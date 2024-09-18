@@ -17,6 +17,8 @@ resources:
   # - nginx/ingress-class.yml
   # - nginx/ingress-controller.yml
   - nginx/ingress.yml
+  - ingress-argocd.yml
+  - argocd-server-nodeport.yml
 
 helmCharts:
   - name: ingress-nginx
