@@ -5,10 +5,10 @@ kind: Kustomization
 images:
 - name: mo991207/counter-springboot-app  # 기존 이미지 이름
   newName: mo991207/counter-springboot-app  # 새로운 이미지 이름
-  newTag: cdc9f5e2e67937b434603169111a17727b873f8a
+  newTag: latest
 - name: mo991207/counter-react-app
   newName: mo991207/counter-react-app
-  newTag: cdc9f5e2e67937b434603169111a17727b873f8a
+  newTag: latest
 
 resources:
   - ../../base
