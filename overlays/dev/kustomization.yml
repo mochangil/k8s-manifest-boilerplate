@@ -37,6 +37,12 @@ helmCharts:
           ports:
             http: 80 # HTTP TargetPort 설정
             https: 443 # HTTPS TargetPort 설정
+        config:
+          enable-cors: "true"
+          cors-allow-origin: "https://39a7-119-198-205-106.ngrok-free.app"
+          cors-allow-methods: "GET, POST, PUT, DELETE"
+          cors-allow-headers: "Authorization, Content-Type"
+          cors-allow-credentials: "true"
 
   - name: argo-cd
     releaseName: argocd
